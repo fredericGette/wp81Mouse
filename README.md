@@ -7,12 +7,12 @@ Based on [wp81mouseJiggler](https://github.com/fredericGette/wp81mouseJiggler).
 ## Features
 
 The simulated mouse has 5 buttons and 2 wheels.  
-You can toggle the _Jiggler_ button to activate/deactive an option which autmatically send a mouse mouvement every second.  
+You can toggle the _Jiggler_ button to activate/deactive an option which autmatically sends a mouse mouvement every second.  
 
-Once the mouse is paired with another device, the next connections doesn't requires further pairing.  
-In case of communication problem (mainly caused by _Message Integrity Check_ error), the mouse automatically reset the connection after a certain amount of time.  
+Once the mouse is paired with another device, the next connections doesn't require further pairing.  
+In case of communication problem (mainly caused by _Message Integrity Check_ error), the mouse automatically resets the connection after a certain amount of time.  
 
-In case of inactivity, the mouse periodically send an empty notification to avoid a connection timeout.  
+In case of inactivity, the mouse periodically sends an empty notification to avoid a connection timeout.  
 
 
 ## Deployment
