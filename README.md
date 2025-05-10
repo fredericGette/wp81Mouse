@@ -2,7 +2,7 @@
 Turns your _Lumia 520_ into a kind of _Microsoft Bluetooth Mobile Mouse 3600_.  
 Based on [wp81mouseJiggler](https://github.com/fredericGette/wp81mouseJiggler).  
 
-![screen](capture01,png)  
+![screen](capture01.png)  
 
 ## Features
 
