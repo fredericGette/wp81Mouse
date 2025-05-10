@@ -14,6 +14,8 @@ In case of communication problem (mainly caused by _Message Integrity Check_ err
 
 In case of inactivity, the mouse periodically sends an empty notification to avoid a connection timeout.  
 
+When you start the connection, the application automatically activates the Bluetooth of the phone. And when you stop the connection, the application automatically restart the Bluetooth to remove any modifications done to the Bluetooth stack.  
+
 >[!WARNING]
 >Because of an unknown reason, the connection can't be established from time to time. As a workaround, you have to reboot the phone.  
 
