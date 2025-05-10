@@ -2,17 +2,22 @@
 Turns your _Lumia 520_ into a kind of _Microsoft Bluetooth Mobile Mouse 3600_.  
 Based on [wp81mouseJiggler](https://github.com/fredericGette/wp81mouseJiggler).  
 
-![screen](capture01,png)  
+![screen](capture01.png)  
 
 ## Features
 
 The simulated mouse has 5 buttons and 2 wheels.  
-You can toggle the _Jiggler_ button to activate/deactive an option which autmatically send a mouse mouvement every second.  
+You can toggle the _Jiggler_ button to activate/deactive an option which autmatically sends a mouse mouvement every second.  
 
-Once the mouse is paired with another device, the next connections doesn't requires further pairing.  
-In case of communication problem (mainly caused by _Message Integrity Check_ error), the mouse automatically reset the connection after a certain amount of time.  
+Once the mouse is paired with another device, the next connections doesn't require further pairing.  
+In case of communication problem (mainly caused by _Message Integrity Check_ error), the mouse automatically resets the connection after a certain amount of time.  
 
-In case of inactivity, the mouse periodically send an empty notification to avoid a connection timeout.  
+In case of inactivity, the mouse periodically sends an empty notification to avoid a connection timeout.  
+
+When you start the connection, the application automatically activates the Bluetooth of the phone. And when you stop the connection, the application automatically restart the Bluetooth to remove any modifications done to the Bluetooth stack.  
+
+>[!WARNING]
+>Because of an unknown reason, the connection can't be established from time to time. As a workaround, you have to reboot the phone.  
 
 
 ## Deployment
