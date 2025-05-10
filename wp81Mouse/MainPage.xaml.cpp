@@ -28,6 +28,20 @@ int16_t mouseY;
 int16_t mouseWheel; 
 int16_t mouseHwheel;
 HANDLE hEventSendNotification;
+double dPreviousX;
+double dPreviousY;
+unsigned int previousXYpointerId;
+
+double dPreviousVwheel;
+unsigned int previousVwheelPointerId;
+
+double dPreviousHwheel;
+unsigned int previousHwheelPointerId;
+
+BOOL jiggler;
+int16_t jigglerX[88] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,-1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,-1,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+int16_t jigglerY[88] = {1,1,1,1,1,1,1,0,1,0,0,0,0,-1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,-1,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,-1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,-1,0,0,0,0,1,0,1,1,1,1,1,1,1};
+unsigned int jigglerIndex;
 
 MainPage::MainPage()
 {
@@ -46,14 +60,14 @@ MainPage::MainPage()
 	// Start the timer immediately here:
 	_checkTimer->Start();
 
-
+	JigglerAppBarButton->IsEnabled = FALSE;
 	ConnectAppBarButton->IsEnabled = TRUE;
 	DisconnectAppBarButton->IsEnabled = FALSE;
 
 	connectionStatus = NOT_CONNECTED;
 
 	mouseButtons = 0;
-	mouseX = -1;
+	mouseX = 0;
 	mouseY = 0;
 	mouseWheel = 0;
 	mouseHwheel = 0;
@@ -63,6 +77,17 @@ MainPage::MainPage()
 		FALSE,	// initial state: nonsignaled
 		L"WP81_SEND_NOTIFICATION"
 	);
+
+	previousXYpointerId = 0;
+
+	dPreviousVwheel = 0.0;
+	previousVwheelPointerId = 0;
+
+	dPreviousHwheel = 0.0;
+	previousHwheelPointerId = 0;
+
+	jiggler = FALSE;
+	jigglerIndex = 0;
 }
 
 /// <summary>
@@ -100,6 +125,7 @@ void MainPage::AppBarButton_Click(Platform::Object^ sender, Windows::UI::Xaml::R
 void MainPage::ConnectMouse()
 {
 	connectionStatusTextBlock->Text = "Starting...";
+	JigglerAppBarButton->IsEnabled = FALSE;
 	ConnectAppBarButton->IsEnabled = FALSE;
 	DisconnectAppBarButton->IsEnabled = FALSE;
 
@@ -146,6 +172,7 @@ void MainPage::DisconnectMouse()
 	connectionStatusTextBlock->ClearValue(Windows::UI::Xaml::Controls::TextBlock::ForegroundProperty);
 	connectionStatusTextBlock->FontWeight = Windows::UI::Text::FontWeights::Normal;
 	connectionStatus = STOPPING;
+	JigglerAppBarButton->IsEnabled = FALSE;
 	ConnectAppBarButton->IsEnabled = FALSE;
 	DisconnectAppBarButton->IsEnabled = FALSE;
 
@@ -160,6 +187,8 @@ void MainPage::DisconnectMouse()
 	});
 }
 
+
+
 void MainPage::CheckCondition_Tick(Platform::Object^ sender, Platform::Object^ e)
 {
 	// This code runs on the UI thread, safe to update UI elements.
@@ -168,11 +197,13 @@ void MainPage::CheckCondition_Tick(Platform::Object^ sender, Platform::Object^ e
 	{
 	case NOT_CONNECTED:
 		connectionStatusTextBlock->Text = "Not connected";
+		JigglerAppBarButton->IsEnabled = FALSE;
 		ConnectAppBarButton->IsEnabled = TRUE;
 		DisconnectAppBarButton->IsEnabled = FALSE;
 		break;
 	case STARTING:
 		connectionStatusTextBlock->Text = "Starting...";
+		JigglerAppBarButton->IsEnabled = FALSE;
 		ConnectAppBarButton->IsEnabled = FALSE;
 		DisconnectAppBarButton->IsEnabled = FALSE;
 		break;
@@ -180,16 +211,19 @@ void MainPage::CheckCondition_Tick(Platform::Object^ sender, Platform::Object^ e
 		connectionStatusTextBlock->Text = "Advertising...";
 		connectionStatusTextBlock->ClearValue(Windows::UI::Xaml::Controls::TextBlock::ForegroundProperty);
 		connectionStatusTextBlock->FontWeight = Windows::UI::Text::FontWeights::Normal;
+		JigglerAppBarButton->IsEnabled = FALSE;
 		ConnectAppBarButton->IsEnabled = FALSE;
 		DisconnectAppBarButton->IsEnabled = TRUE;
 		break;
 	case PAIRING:
 		connectionStatusTextBlock->Text = "Pairing...";
+		JigglerAppBarButton->IsEnabled = FALSE;
 		ConnectAppBarButton->IsEnabled = FALSE;
 		DisconnectAppBarButton->IsEnabled = FALSE;
 		break;
 	case SERVING_ATTRIBUTES:
 		connectionStatusTextBlock->Text = "Serving attributes...";
+		JigglerAppBarButton->IsEnabled = FALSE;
 		ConnectAppBarButton->IsEnabled = FALSE;
 		DisconnectAppBarButton->IsEnabled = TRUE;
 		break;
@@ -197,11 +231,13 @@ void MainPage::CheckCondition_Tick(Platform::Object^ sender, Platform::Object^ e
 		connectionStatusTextBlock->Text = "Connected";
 		connectionStatusTextBlock->Foreground = ref new SolidColorBrush(Windows::UI::Colors::LightGreen);
 		connectionStatusTextBlock->FontWeight = Windows::UI::Text::FontWeights::Bold;
+		JigglerAppBarButton->IsEnabled = TRUE;
 		ConnectAppBarButton->IsEnabled = FALSE;
 		DisconnectAppBarButton->IsEnabled = TRUE;
 		break;
 	case STOPPING:
 		connectionStatusTextBlock->Text = "Stopping...";
+		JigglerAppBarButton->IsEnabled = FALSE;
 		ConnectAppBarButton->IsEnabled = FALSE;
 		DisconnectAppBarButton->IsEnabled = FALSE;
 		break;
@@ -209,4 +245,209 @@ void MainPage::CheckCondition_Tick(Platform::Object^ sender, Platform::Object^ e
 		connectionStatusTextBlock->Text = "Unkown";
 		break;
 	}
+
+	if (jiggler)
+	{
+		mouseX = jigglerX[jigglerIndex];
+		mouseY = jigglerY[jigglerIndex];
+
+		if (connectionStatus == SENDING_NOTIFICATIONS)
+		{
+			SetEvent(hEventSendNotification);
+		}
+
+		jigglerIndex++;
+		if (jigglerIndex == 88)
+		{
+			jigglerIndex = 0;
+		}
+	}
+}
+
+void MainPage::Trackpad_Moved(Platform::Object ^ sender, PointerRoutedEventArgs ^ e)
+{
+	// Get the pointer position
+	Windows::UI::Input::PointerPoint^ pointerPoint = e->GetCurrentPoint(dynamic_cast<UIElement^>(sender));
+
+	// Get the unique ID for this pointer
+	unsigned int pointerId = pointerPoint->PointerId;
+
+	// We manage only one touche pointer: it's not possible to move the mouse with 2 fingers.
+	if (previousXYpointerId == pointerId && dPreviousX != 0.0 && dPreviousY != 0.0)
+	{
+		mouseX = static_cast<int16_t>(round(pointerPoint->Position.X - dPreviousX));
+		mouseY = static_cast<int16_t>(round(pointerPoint->Position.Y - dPreviousY));
+
+		String^ stringValue = "ID="+ pointerId +" X=" + mouseX + " Y=" + mouseY + "\n";
+
+		OutputDebugStringW(stringValue->Data());
+
+		if (connectionStatus == SENDING_NOTIFICATIONS)
+		{
+			SetEvent(hEventSendNotification);
+		}
+	}
+
+	dPreviousX = pointerPoint->Position.X;
+	dPreviousY = pointerPoint->Position.Y;
+	previousXYpointerId = pointerId;
+}
+
+void MainPage::Trackpad_Released(Platform::Object ^ sender, PointerRoutedEventArgs ^ e)
+{
+	dPreviousX = 0.0;
+	dPreviousY = 0.0;
+	previousXYpointerId = 0;
+	mouseX = 0;
+	mouseY = 0;
+	OutputDebugStringW(L"Trackpad: Touch released or exited\n");
+}
+
+void MainPage::AppBarToggleButton_Checked(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	jiggler = TRUE;
+	jigglerIndex = 0;
+	OutputDebugStringW(L"Checked\n");
+}
+
+void MainPage::AppBarToggleButton_Unchecked(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	jiggler = FALSE;
+	mouseX = 0;
+	mouseY = 0;
+	OutputDebugStringW(L"Unchecked\n");
+}
+
+void MainPage::Button_Pressed(Platform::Object ^ sender, PointerRoutedEventArgs ^ e)
+{
+	Border^ b = (Border^)sender;
+	OutputDebugStringW(b->Tag->ToString()->Data());
+	OutputDebugStringW(L" Pressed\n");
+	if (b->Tag->ToString() == "Button1")
+	{
+		mouseButtons |= 0x01;
+	}
+	else if (b->Tag->ToString() == "Button2")
+	{
+		mouseButtons |= 0x02;
+	}
+	else if (b->Tag->ToString() == "Button3")
+	{
+		mouseButtons |= 0x04;
+	}
+	else if (b->Tag->ToString() == "Button4")
+	{
+		mouseButtons |= 0x08;
+	}
+	else if (b->Tag->ToString() == "Button5")
+	{
+		mouseButtons |= 0x10;
+	}
+
+	if (connectionStatus == SENDING_NOTIFICATIONS)
+	{
+		SetEvent(hEventSendNotification);
+	}
+}
+
+void MainPage::Button_Released(Platform::Object ^ sender, PointerRoutedEventArgs ^ e)
+{
+	Border^ b = (Border^)sender;
+	OutputDebugStringW(b->Tag->ToString()->Data());
+	OutputDebugStringW(L" Released\n");
+	if (b->Tag->ToString() == "Button1")
+	{
+		mouseButtons &= 0xFE;
+	}
+	else if (b->Tag->ToString() == "Button2")
+	{
+		mouseButtons &= 0xFD;
+	}
+	else if (b->Tag->ToString() == "Button3")
+	{
+		mouseButtons &= 0xFB;
+	}
+	else if (b->Tag->ToString() == "Button4")
+	{
+		mouseButtons &= 0xF7;
+	}
+	else if (b->Tag->ToString() == "Button5")
+	{
+		mouseButtons &= 0xEF;
+	}
+
+	if (connectionStatus == SENDING_NOTIFICATIONS)
+	{
+		SetEvent(hEventSendNotification);
+	}
+}
+
+void MainPage::Vwheel_Moved(Platform::Object ^ sender, PointerRoutedEventArgs ^ e)
+{
+	// Get the pointer position
+	Windows::UI::Input::PointerPoint^ pointerPoint = e->GetCurrentPoint(dynamic_cast<UIElement^>(sender));
+
+	// Get the unique ID for this pointer
+	unsigned int pointerId = pointerPoint->PointerId;
+
+	// We manage only one touche pointer
+	if (previousVwheelPointerId == pointerId && dPreviousVwheel != 0.0)
+	{
+		mouseWheel = static_cast<int16_t>(round(pointerPoint->Position.Y - dPreviousVwheel));
+
+		String^ stringValue = "ID=" + pointerId + " Wheel=" + mouseWheel + "\n";
+
+		OutputDebugStringW(stringValue->Data());
+
+		if (connectionStatus == SENDING_NOTIFICATIONS)
+		{
+			SetEvent(hEventSendNotification);
+		}
+	}
+
+	dPreviousVwheel = pointerPoint->Position.Y;
+	previousVwheelPointerId = pointerId;
+}
+
+void MainPage::Vwheel_Released(Platform::Object ^ sender, PointerRoutedEventArgs ^ e)
+{
+	dPreviousVwheel = 0.0;
+	previousVwheelPointerId = 0;
+	mouseWheel = 0;
+	OutputDebugStringW(L"V-Wheel: Touch released or exited\n");
+}
+
+void MainPage::Hwheel_Moved(Platform::Object ^ sender, PointerRoutedEventArgs ^ e)
+{
+	// Get the pointer position
+	Windows::UI::Input::PointerPoint^ pointerPoint = e->GetCurrentPoint(dynamic_cast<UIElement^>(sender));
+
+	// Get the unique ID for this pointer
+	unsigned int pointerId = pointerPoint->PointerId;
+
+	// We manage only one touche pointer
+	if (previousHwheelPointerId == pointerId && dPreviousHwheel != 0.0)
+	{
+		mouseHwheel = static_cast<int16_t>(round(pointerPoint->Position.X - dPreviousHwheel));
+
+		String^ stringValue = "ID=" + pointerId + " Hwheel=" + mouseHwheel + "\n";
+
+		OutputDebugStringW(stringValue->Data());
+
+		if (connectionStatus == SENDING_NOTIFICATIONS)
+		{
+			SetEvent(hEventSendNotification);
+		}
+	}
+
+	dPreviousHwheel = pointerPoint->Position.X;
+	previousHwheelPointerId = pointerId;
+}
+
+void MainPage::Hwheel_Released(Platform::Object ^ sender, PointerRoutedEventArgs ^ e)
+{
+	dPreviousHwheel = 0.0;
+	previousHwheelPointerId = 0;
+	mouseHwheel = 0;
+	OutputDebugStringW(L"H-Wheel: Touch released or exited\n");
 }

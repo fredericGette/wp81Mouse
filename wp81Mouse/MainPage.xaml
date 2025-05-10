@@ -7,18 +7,51 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal">
-        <TextBlock Text="Connection status:"
-                   FontSize="16"
-                   Margin="10"/>
-        <TextBlock x:Name="connectionStatusTextBlock"
-                   Text="Not connected"
-                   FontSize="16"
-                   Margin="10"/>
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,15">
+            <Border Tag="Button4" BorderBrush="White" BorderThickness="2" Background="Black" Margin="10,0,10,0" Width="100" PointerPressed="Button_Pressed" PointerReleased="Button_Released" PointerExited="Button_Released">
+                <TextBlock Text="Button4" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
+            </Border>
+            <Border Tag="Button5" BorderBrush="White" BorderThickness="2" Background="Black" Margin="10,0,10,0" Width="100" PointerPressed="Button_Pressed" PointerReleased="Button_Released" PointerExited="Button_Released">
+                <TextBlock Text="Button5" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
+            </Border>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,40">
+            <Border Tag="Button1" BorderBrush="White" BorderThickness="2" Background="Black" Margin="10,0,10,0" Width="100" PointerPressed="Button_Pressed" PointerReleased="Button_Released" PointerExited="Button_Released">
+                <TextBlock Text="Left" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
+            </Border>
+            <Border Tag="Button3" BorderBrush="White" BorderThickness="2" Background="Black" Margin="10,0,10,0" Width="100" PointerPressed="Button_Pressed" PointerReleased="Button_Released" PointerExited="Button_Released">
+                <TextBlock Text="Middle" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
+            </Border>
+            <Border Tag="Button2" BorderBrush="White" BorderThickness="2" Background="Black" Margin="10,0,10,0" Width="100" PointerPressed="Button_Pressed" PointerReleased="Button_Released" PointerExited="Button_Released">
+                <TextBlock Text="Right" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
+            </Border>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Border Tag="Vwheel" BorderBrush="White" BorderThickness="2" Background="Black" Margin="25,0,25,0" Width="30" Height="300" PointerMoved="Vwheel_Moved" PointerReleased="Vwheel_Released" PointerExited="Vwheel_Released">
+                <TextBlock Text="V  |  W H  E  E  L" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Border>
+            <Border Tag="Trackpad" BorderBrush="White" BorderThickness="2" Background="Black" Width="300" Height="300" PointerMoved="Trackpad_Moved" PointerReleased="Trackpad_Released" PointerExited="Trackpad_Released">
+                <TextBlock Text="TRACKPAD" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+        </StackPanel>
+        <Border Tag="Hwheel" BorderBrush="White" BorderThickness="2" Background="Black" Margin="60,25,0,0" Width="300" Height="30" PointerMoved="Hwheel_Moved" PointerReleased="Hwheel_Released" PointerExited="Hwheel_Released">
+            <TextBlock Text="H - WHEEL" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="Connection status:"
+                       FontSize="16"
+                       Margin="10"/>
+            <TextBlock x:Name="connectionStatusTextBlock"
+                       Text="Not connected"
+                       FontSize="16"
+                       Margin="10"/>
+        </StackPanel>
     </StackPanel>
 
     <Page.BottomAppBar>
         <CommandBar>
+            <AppBarToggleButton x:Name="JigglerAppBarButton" Tag="Jiggler" Label="Jiggler" Icon="Shuffle" Checked="AppBarToggleButton_Checked" Unchecked="AppBarToggleButton_Unchecked"/>
             <AppBarButton x:Name="ConnectAppBarButton" Tag="Connect" Label="Connect" Icon="Accept" Click="AppBarButton_Click"/>
             <AppBarButton x:Name="DisconnectAppBarButton" Tag="Disconnect" Label="Disconnect" Icon="Cancel" Click="AppBarButton_Click"/>
         </CommandBar>

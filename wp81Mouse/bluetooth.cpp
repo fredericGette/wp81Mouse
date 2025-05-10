@@ -2896,7 +2896,7 @@ reset:
 		cmd_inputBuffer[i++] = *pWheel >> 8; // msb Wheel
 		cmd_inputBuffer[i++] = *pHwheel & 0xFF; // lsb Horizontal Wheel
 		cmd_inputBuffer[i++] = *pHwheel >> 8; // msb Horizontal Wheel
-		printBuffer2HexString(cmd_inputBuffer, i, FALSE, 'c');
+		//printBuffer2HexString(cmd_inputBuffer, i, FALSE, 'c');
 		success = DeviceIoControl(hciControlDeviceCmd, IOCTL_CONTROL_WRITE_HCI, cmd_inputBuffer, i, cmd_outputBuffer, 4, &returned, NULL);
 		if (!success)
 		{
