@@ -14,6 +14,9 @@ In case of communication problem (mainly caused by _Message Integrity Check_ err
 
 In case of inactivity, the mouse periodically sends an empty notification to avoid a connection timeout.  
 
+>[!WARNING]
+>For an unkown reason you the connection can't be established from time to time. As a workaround, you have to reboot the phone.  
+
 
 ## Deployment
 
