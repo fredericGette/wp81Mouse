@@ -8,13 +8,6 @@ typedef struct _AttributeData {
 	BYTE UUID16bits[2];
 } AttributeData;
 
-typedef struct _MouseData {
-	BYTE xlsb;
-	BYTE xmsb;
-	BYTE ylsb;
-	BYTE ymsb;
-} MouseData;
-
 static HANDLE hEventCmdFinished = NULL;
 static HANDLE hLogFile;
 static BOOL readLoop_continue;
@@ -698,7 +691,7 @@ int sendConnectionParameterUpdateRequest(HANDLE hciControlDeviceCmd, BYTE* cmd_i
 	return 0;
 }
 
-void initData(AttributeData* characteristics, AttributeData* services, AttributeData* informations, BYTE* reportMap, MouseData* mouseData)
+void initData(AttributeData* characteristics, AttributeData* services, AttributeData* informations, BYTE* reportMap)
 {
 	characteristics[0].handle[0] = 0x02;
 	characteristics[0].handle[1] = 0x00;
@@ -922,218 +915,6 @@ void initData(AttributeData* characteristics, AttributeData* services, Attribute
 	reportMap[103] = 0xC0; //     End Collection
 	reportMap[104] = 0xC0; //   End Collection
 	reportMap[105] = 0xC0; // End Collection
-
-	ZeroMemory(mouseData, 88 * sizeof(MouseData));
-	mouseData[0].xlsb = 0x01;
-	mouseData[0].ylsb = 0x01;
-	mouseData[1].xlsb = 0x01;
-	mouseData[1].ylsb = 0x01;
-	mouseData[2].xlsb = 0x01;
-	mouseData[2].ylsb = 0x01;
-	mouseData[3].xlsb = 0x01;
-	mouseData[3].ylsb = 0x01;
-	mouseData[4].xlsb = 0x01;
-	mouseData[4].ylsb = 0x01;
-	mouseData[5].xlsb = 0x01;
-	mouseData[5].ylsb = 0x01;
-	mouseData[6].xlsb = 0x01;
-	mouseData[6].ylsb = 0x01;
-	mouseData[7].xlsb = 0x01;
-	mouseData[8].xlsb = 0x01;
-	mouseData[8].ylsb = 0x01;
-	mouseData[9].xlsb = 0x01;
-	mouseData[10].xlsb = 0x01;
-	mouseData[11].xlsb = 0x01;
-	mouseData[12].xlsb = 0x01;
-	mouseData[13].xlsb = 0x01;
-	mouseData[13].ylsb = 0xFF; // -1
-	mouseData[13].ymsb = 0xFF;
-	mouseData[14].xlsb = 0x01;
-	mouseData[15].xlsb = 0x01;
-	mouseData[15].ylsb = 0xFF;
-	mouseData[15].ymsb = 0xFF;
-	mouseData[16].xlsb = 0x01;
-	mouseData[16].ylsb = 0xFF;
-	mouseData[16].ymsb = 0xFF;
-	mouseData[17].xlsb = 0x01;
-	mouseData[17].ylsb = 0xFF;
-	mouseData[17].ymsb = 0xFF;
-	mouseData[18].ylsb = 0xFF;
-	mouseData[18].ymsb = 0xFF;
-	mouseData[19].xlsb = 0x01;
-	mouseData[19].ylsb = 0xFF;
-	mouseData[19].ymsb = 0xFF;
-	mouseData[20].ylsb = 0xFF;
-	mouseData[20].ymsb = 0xFF;
-	mouseData[21].ylsb = 0xFF;
-	mouseData[21].ymsb = 0xFF;
-	mouseData[22].ylsb = 0xFF;
-	mouseData[22].ymsb = 0xFF;
-	mouseData[23].ylsb = 0xFF;
-	mouseData[23].ymsb = 0xFF;
-	mouseData[24].xlsb = 0xFF;
-	mouseData[24].xmsb = 0xFF;
-	mouseData[24].ylsb = 0xFF;
-	mouseData[24].ymsb = 0xFF;
-	mouseData[25].ylsb = 0xFF;
-	mouseData[25].ymsb = 0xFF;
-	mouseData[26].xlsb = 0xFF;
-	mouseData[26].xmsb = 0xFF;
-	mouseData[26].ylsb = 0xFF;
-	mouseData[26].ymsb = 0xFF;
-	mouseData[27].xlsb = 0xFF;
-	mouseData[27].xmsb = 0xFF;
-	mouseData[27].ylsb = 0xFF;
-	mouseData[27].ymsb = 0xFF;
-	mouseData[28].xlsb = 0xFF;
-	mouseData[28].xmsb = 0xFF;
-	mouseData[28].ylsb = 0xFF;
-	mouseData[28].ymsb = 0xFF;
-	mouseData[29].xlsb = 0xFF;
-	mouseData[29].xmsb = 0xFF;
-	mouseData[30].xlsb = 0xFF;
-	mouseData[30].xmsb = 0xFF;
-	mouseData[30].ylsb = 0xFF;
-	mouseData[30].ymsb = 0xFF;
-	mouseData[31].xlsb = 0xFF;
-	mouseData[31].xmsb = 0xFF;
-	mouseData[32].xlsb = 0xFF;
-	mouseData[32].xmsb = 0xFF;
-	mouseData[33].xlsb = 0xFF;
-	mouseData[33].xmsb = 0xFF;
-	mouseData[34].xlsb = 0xFF;
-	mouseData[34].xmsb = 0xFF;
-	mouseData[35].xlsb = 0xFF;
-	mouseData[35].xmsb = 0xFF;
-	mouseData[35].ylsb = 0x01;
-	mouseData[36].xlsb = 0xFF;
-	mouseData[36].xmsb = 0xFF;
-	mouseData[37].xlsb = 0xFF;
-	mouseData[37].xmsb = 0xFF;
-	mouseData[37].ylsb = 0x01;
-	mouseData[38].xlsb = 0xFF;
-	mouseData[38].xmsb = 0xFF;
-	mouseData[38].ylsb = 0x01;
-	mouseData[39].xlsb = 0xFF;
-	mouseData[39].xmsb = 0xFF;
-	mouseData[39].ylsb = 0x01;
-	mouseData[40].xlsb = 0xFF;
-	mouseData[40].xmsb = 0xFF;
-	mouseData[40].ylsb = 0x01;
-	mouseData[41].xlsb = 0xFF;
-	mouseData[41].xmsb = 0xFF;
-	mouseData[41].ylsb = 0x01;
-	mouseData[42].xlsb = 0xFF;
-	mouseData[42].xmsb = 0xFF;
-	mouseData[42].ylsb = 0x01;
-	mouseData[43].xlsb = 0xFF;
-	mouseData[43].xmsb = 0xFF;
-	mouseData[43].ylsb = 0x01;
-	mouseData[44].xlsb = 0xFF;
-	mouseData[44].xmsb = 0xFF;
-	mouseData[44].ylsb = 0x01;
-	mouseData[45].xlsb = 0xFF;
-	mouseData[45].xmsb = 0xFF;
-	mouseData[45].ylsb = 0x01;
-	mouseData[46].xlsb = 0xFF;
-	mouseData[46].xmsb = 0xFF;
-	mouseData[46].ylsb = 0x01;
-	mouseData[47].xlsb = 0xFF;
-	mouseData[47].xmsb = 0xFF;
-	mouseData[47].ylsb = 0x01;
-	mouseData[48].xlsb = 0xFF;
-	mouseData[48].xmsb = 0xFF;
-	mouseData[48].ylsb = 0x01;
-	mouseData[49].xlsb = 0xFF;
-	mouseData[49].xmsb = 0xFF;
-	mouseData[49].ylsb = 0x01;
-	mouseData[50].xlsb = 0xFF;
-	mouseData[50].xmsb = 0xFF;
-	mouseData[50].ylsb = 0x01;
-	mouseData[51].xlsb = 0xFF;
-	mouseData[51].xmsb = 0xFF;
-	mouseData[52].xlsb = 0xFF;
-	mouseData[52].xmsb = 0xFF;
-	mouseData[52].ylsb = 0x01;
-	mouseData[53].xlsb = 0xFF;
-	mouseData[53].xmsb = 0xFF;
-	mouseData[54].xlsb = 0xFF;
-	mouseData[54].xmsb = 0xFF;
-	mouseData[55].xlsb = 0xFF;
-	mouseData[55].xmsb = 0xFF;
-	mouseData[56].xlsb = 0xFF;
-	mouseData[56].xmsb = 0xFF;
-	mouseData[57].xlsb = 0xFF;
-	mouseData[57].xmsb = 0xFF;
-	mouseData[57].ylsb = 0xFF;
-	mouseData[57].ymsb = 0xFF;
-	mouseData[58].xlsb = 0xFF;
-	mouseData[58].xmsb = 0xFF;
-	mouseData[59].xlsb = 0xFF;
-	mouseData[59].xmsb = 0xFF;
-	mouseData[59].ylsb = 0xFF;
-	mouseData[59].ymsb = 0xFF;
-	mouseData[60].xlsb = 0xFF;
-	mouseData[60].xmsb = 0xFF;
-	mouseData[60].ylsb = 0xFF;
-	mouseData[60].ymsb = 0xFF;
-	mouseData[61].xlsb = 0xFF;
-	mouseData[61].xmsb = 0xFF;
-	mouseData[61].ylsb = 0xFF;
-	mouseData[61].ymsb = 0xFF;
-	mouseData[62].ylsb = 0xFF;
-	mouseData[62].ymsb = 0xFF;
-	mouseData[63].xlsb = 0xFF;
-	mouseData[63].xmsb = 0xFF;
-	mouseData[63].ylsb = 0xFF;
-	mouseData[63].ymsb = 0xFF;
-	mouseData[64].ylsb = 0xFF;
-	mouseData[64].ymsb = 0xFF;
-	mouseData[65].ylsb = 0xFF;
-	mouseData[65].ymsb = 0xFF;
-	mouseData[66].ylsb = 0xFF;
-	mouseData[66].ymsb = 0xFF;
-	mouseData[67].ylsb = 0xFF;
-	mouseData[67].ymsb = 0xFF;
-	mouseData[68].xlsb = 0x01;
-	mouseData[68].ylsb = 0xFF;
-	mouseData[68].ymsb = 0xFF;
-	mouseData[69].ylsb = 0xFF;
-	mouseData[69].ymsb = 0xFF;
-	mouseData[70].xlsb = 0x01;
-	mouseData[70].ylsb = 0xFF;
-	mouseData[70].ymsb = 0xFF;
-	mouseData[71].xlsb = 0x01;
-	mouseData[71].ylsb = 0xFF;
-	mouseData[71].ymsb = 0xFF;
-	mouseData[72].xlsb = 0x01;
-	mouseData[72].ylsb = 0xFF;
-	mouseData[72].ymsb = 0xFF;
-	mouseData[73].xlsb = 0x01;
-	mouseData[74].xlsb = 0x01;
-	mouseData[74].ylsb = 0xFF;
-	mouseData[74].ymsb = 0xFF;
-	mouseData[75].xlsb = 0x01;
-	mouseData[76].xlsb = 0x01;
-	mouseData[77].xlsb = 0x01;
-	mouseData[78].xlsb = 0x01;
-	mouseData[79].xlsb = 0x01;
-	mouseData[79].ylsb = 0x01;
-	mouseData[80].xlsb = 0x01;
-	mouseData[81].xlsb = 0x01;
-	mouseData[81].ylsb = 0x01;
-	mouseData[82].xlsb = 0x01;
-	mouseData[82].ylsb = 0x01;
-	mouseData[83].xlsb = 0x01;
-	mouseData[83].ylsb = 0x01;
-	mouseData[84].xlsb = 0x01;
-	mouseData[84].ylsb = 0x01;
-	mouseData[85].xlsb = 0x01;
-	mouseData[85].ylsb = 0x01;
-	mouseData[86].xlsb = 0x01;
-	mouseData[86].ylsb = 0x01;
-	mouseData[87].xlsb = 0x01;
-	mouseData[87].ylsb = 0x01;
 }
 
 void waitForMessage(BOOL(*isMessageReceived)())
@@ -1507,7 +1288,6 @@ int bleConnectionStart(ConnectionStatus *pConnectionStatus, BYTE *pButton, int16
 	int result = EXIT_FAILURE;
 	BOOL startedSendingReportMap = FALSE;
 	DWORD nbIterationWoAclRequest = 0;
-	int mouseDataIdx;
 
 	aclData[0] = (BYTE*)malloc(1024);
 	aclData[1] = (BYTE*)malloc(1024);
@@ -1525,9 +1305,7 @@ int bleConnectionStart(ConnectionStatus *pConnectionStatus, BYTE *pButton, int16
 	int reportMapIdx = 0;
 	BYTE* reportMap = (BYTE*)malloc(106);
 
-	MouseData* mouseData = (MouseData*)malloc(88 * sizeof(MouseData));
-
-	initData(characteristics, services, informations, reportMap, mouseData);
+	initData(characteristics, services, informations, reportMap);
 
 	// Our LTK (Long Term Key) value (TODO: we can generate a new random value each time)
 	BYTE ltkValue[] = {
@@ -2860,7 +2638,6 @@ reset:
 
 	debug("Start sending Handle Value Notification...\n");
 	*pConnectionStatus = SENDING_NOTIFICATIONS;
-	mouseDataIdx = 0;
 	nbPacketNotCompleted = 0;
 	while (mainLoop_continue)
 	{
@@ -2985,7 +2762,6 @@ exit:
 	free(services);
 	free(informations);
 	free(reportMap);
-	free(mouseData);
 
 	return result;
 }
