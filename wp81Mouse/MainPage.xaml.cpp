@@ -18,6 +18,7 @@ using namespace Windows::UI::Xaml::Data;
 using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
+using namespace Windows::Graphics::Display;
 
 using namespace concurrency;
 
@@ -107,6 +108,8 @@ void MainPage::OnNavigatedTo(NavigationEventArgs^ e)
 	// If you are using the NavigationHelper provided by some templates,
 	// this event is handled for you.
 
+	// Lock the display orientation to Portrait
+	DisplayInformation::AutoRotationPreferences = DisplayOrientations::Portrait;
 }
 
 void MainPage::AppBarButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)

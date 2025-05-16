@@ -9,7 +9,6 @@ typedef struct _AttributeData {
 } AttributeData;
 
 static HANDLE hEventCmdFinished = NULL;
-static HANDLE hLogFile;
 static BOOL readLoop_continue;
 static BOOL mainLoop_continue;
 static BYTE connectionHandle[2];
@@ -74,18 +73,6 @@ void printBuffer2HexString(BYTE* buffer, size_t bufSize, BOOL isReceived, CHAR s
 	sprintf_s(temp + 24 + i * 3, 1024 - 24 - i * 3, "\n");
 	//debug("%s", temp);
 
-	if (hLogFile != NULL)
-	{
-		DWORD dwBytesToWrite = 25 + i * 3;
-		DWORD dwBytesWritten = 0;
-		WriteFile(
-			hLogFile,           // open file handle
-			temp,      // start of data to write
-			dwBytesToWrite,  // number of bytes to write
-			&dwBytesWritten, // number of bytes that were written
-			NULL);            // no overlapped structure
-	}
-
 	free(temp);
 }
 
@@ -97,18 +84,6 @@ void printStringValue(CHAR* string0, DWORD value)
 	GetSystemTimeAsFileTime(&SystemFileTime);
 	sprintf_s(temp, 1024, "%010u.%010u %s %u\n", SystemFileTime.dwHighDateTime, SystemFileTime.dwLowDateTime, string0, value);
 	debug("%s", temp);
-
-	if (hLogFile != NULL)
-	{
-		DWORD dwBytesToWrite = strlen(temp);
-		DWORD dwBytesWritten = 0;
-		WriteFile(
-			hLogFile,           // open file handle
-			temp,      // start of data to write
-			dwBytesToWrite,  // number of bytes to write
-			&dwBytesWritten, // number of bytes that were written
-			NULL);            // no overlapped structure
-	}
 
 	free(temp);
 }
@@ -1314,19 +1289,6 @@ int bleConnectionStart(ConnectionStatus *pConnectionStatus, BYTE *pButton, int16
 	};
 
 	mainLoop_continue = TRUE;
-
-	hLogFile = CreateFileA("C:\\Data\\USERS\\Public\\Documents\\wp81mouse.log",                // name of the write
-		GENERIC_WRITE,          // open for writing
-		FILE_SHARE_READ,        // share
-		NULL,                   // default security
-		CREATE_ALWAYS,          // always create new file 
-		FILE_ATTRIBUTE_NORMAL,  // normal file
-		NULL);                  // no attr. template
-	if (hLogFile == INVALID_HANDLE_VALUE)
-	{
-		debug("Failed to open log file! 0x%08X\n", GetLastError());
-		return EXIT_FAILURE;
-	}
 
 	cmd_inputBuffer = (BYTE*)malloc(1024);
 	cmd_outputBuffer = (BYTE*)malloc(1024);
@@ -2750,7 +2712,6 @@ exit:
 	//}
 
 	CloseHandle(hciControlDeviceCmd);
-	CloseHandle(hLogFile);
 	free(cmd_inputBuffer);
 	free(cmd_outputBuffer);
 	free(aclData[0]);
